@@ -357,14 +357,22 @@
     }
 
     if (browserSupportDownload && (data.datauri || data.content)) {
+      var windowObjectReference,
+          strWindowFeatures = "menubar=no,location=no,resizable=yes,scrollbars=yes,status=no";
+
       a = document.createElement('a');
       a.href = data.datauri || ('data:' + type + ';base64,' + window.btoa(unescape(encodeURIComponent(data.content))));
       a.download = filename;
 
-      document.body.appendChild(a);
+      // If the url have has, make it popup instead
+      if (window.location.hash.length === 0) {
+        document.body.appendChild(a);
 
-      a.click();
-      a.remove();
+        a.click();
+        a.remove();
+      } else {
+        windowObjectReference = window.open(a.href, "Graph_Export", strWindowFeatures);
+      }
     } else if (browserSupportSafari && (data.datauri || data.content)) {
       var windowObjectReference,
           strWindowFeatures = "menubar=no,location=no,resizable=yes,scrollbars=yes,status=no",
