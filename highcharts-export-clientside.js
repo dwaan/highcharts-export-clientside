@@ -356,27 +356,24 @@
       throw new Error("Something went wrong while exporting the chart");
     }
 
-    if (browserSupportDownload && (data.datauri || data.content)) {
-      var windowObjectReference,
-          strWindowFeatures = "menubar=no,location=no,resizable=yes,scrollbars=yes,status=no";
+    var windowObjectReference,
+        strWindowFeatures = "menubar=no,location=no,resizable=yes,scrollbars=yes,status=no";
 
+    if (browserSupportDownload && (data.datauri || data.content)) {
       a = document.createElement('a');
       a.href = data.datauri || ('data:' + type + ';base64,' + window.btoa(unescape(encodeURIComponent(data.content))));
       a.download = filename;
 
-      // If the url have has, make it popup instead
-      if (window.location.hash.length === 0) {
-        document.body.appendChild(a);
+      document.body.appendChild(a);
 
-        a.click();
-        a.remove();
-      } else {
+      if (window.location.hash.length > 0) {
         windowObjectReference = window.open(a.href, "Graph_Export", strWindowFeatures);
+      } else {
+        a.click();
       }
+      a.remove();
     } else if (browserSupportSafari && (data.datauri || data.content)) {
-      var windowObjectReference,
-          strWindowFeatures = "menubar=no,location=no,resizable=yes,scrollbars=yes,status=no",
-          href = data.datauri || ('data:' + type + ';base64,' + window.btoa(unescape(encodeURIComponent(data.content))));
+      var href = data.datauri || ('data:' + type + ';base64,' + window.btoa(unescape(encodeURIComponent(data.content))));
 
       windowObjectReference = window.open(href, "Graph_Export", strWindowFeatures);
     } else if (browserSupportBlob && (data.blob || data.content)) {
